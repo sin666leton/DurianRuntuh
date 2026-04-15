@@ -3,6 +3,7 @@
 namespace App\Modules\Catalog\Application\UseCases;
 
 use App\Modules\Catalog\Application\Commands\CreateProductCommand;
+use App\Modules\Catalog\Application\DTOs\ProductSimpleDTO;
 use App\Modules\Catalog\Domain\Product\Contracts\ProductCommandContract;
 use App\Modules\Catalog\Domain\Product\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
@@ -17,26 +18,25 @@ class CreateProduct
         private ProductCommandContract $product
     ) {}
 
-    public function handle(CreateProductCommand $dto): Response
+    public function handle(CreateProductCommand $dto): ProductSimpleDTO
     {
-        try {
-            if (is_null($dto->code)) {
-                $codeVO = $this->product->findLastCode();
-                $dto->code = intval($codeVO->value)+1;
-            }
-
-            $entity = ProductEntity::create(
-                new NameVO($dto->name),
-                new ProductCode($dto->code)
-            );
-
-            if ($this->product->isDuplicate($entity)) throw new DomainConflictException("Produk '".$entity->getName()."' dengan code '".$entity->getCode()."' sudah tersedia pada projek ini");
-
-            $this->product->save($entity);
-
-            return Response::ok('Produk berhasil ditambahkan');
-        } catch (DomainException $th) {
-            return Response::fail($th->getMessage());
+        if (is_null($dto->code)) {
+            $codeVO = $this->product->findLastCode();
+            $dto->code = intval($codeVO->value)+1;
         }
+
+        $entity = ProductEntity::create(
+            new NameVO($dto->name),
+            new ProductCode($dto->code)
+        );
+
+        if ($this->product->isDuplicate($entity)) throw new DomainConflictException("Produk '".$entity->getName()."' dengan code '".$entity->getCode()."' sudah tersedia");
+        
+        $this->product->save($entity);
+
+        return new ProductSimpleDTO(
+            $entity->getName(),
+            $entity->getCode()
+        );
     }
 }

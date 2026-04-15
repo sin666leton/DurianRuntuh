@@ -6,6 +6,6 @@ class CreateProductCommand
 {
     public function __construct(
         public string $name,
-        public ?string $code
+        public ?string $code = null
     ) {}
 }
