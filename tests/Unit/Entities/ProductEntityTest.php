@@ -8,7 +8,6 @@ use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 use App\Modules\Shared\Domain\ValueObjects\NameVO;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
-use Tests\Support\CodeVORule;
 
 #[Group('entity')]
 #[Group('product')]
@@ -21,7 +20,6 @@ class ProductEntityTest extends TestCase
         parent::setUp();
 
         $this->entity = ProductEntity::create(
-            1,
             new NameVO('Product'),
             new ProductCode('1')
         );
@@ -39,17 +37,6 @@ class ProductEntityTest extends TestCase
         $this->assertEquals(1, $this->entity->getId());
     }
 
-    public function test_set_project_id_throw_DomainValidationException_when_project_id_already_filled()
-    {
-        $this->expectException(DomainValidationException::class);
-        $this->expectExceptionMessage('ID Project tidak dapat diperbarui');
-        $this->expectExceptionCode(422);
-
-        $this->entity->setProjectId(2);
-
-        $this->assertEquals(1, $this->entity->getProjectId());
-    }
-
     public function test_entity_return_value()
     {
         $this->entity->setId(1);
@@ -57,6 +44,5 @@ class ProductEntityTest extends TestCase
         $this->assertEquals('Product', $this->entity->getName());
         $this->assertEquals('1', $this->entity->getCode());
         $this->assertEquals(1, $this->entity->getId());
-        $this->assertEquals(1, $this->entity->getProjectId());
     }
 }

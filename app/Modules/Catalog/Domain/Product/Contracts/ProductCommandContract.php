@@ -17,10 +17,9 @@ interface ProductCommandContract
     /**
      * Ambil kode terakhir
      * 
-     * @param int $projectId
      * @return ProductCode
      */
-    public function findLastCode(int $projectId): ProductCode;
+    public function findLastCode(): ProductCode;
 
     /**
      * Tambah produk

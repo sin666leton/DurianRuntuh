@@ -9,16 +9,14 @@ use App\Modules\Shared\Domain\ValueObjects\NameVO;
 class ProductEntity
 {
     public function __construct(
-        private ?int $projectId,
         private ?int $id,
         private NameVO $name,
         private ProductCode $code,
     ) {}
 
-    public static function create(int $projectId, NameVO $name, ProductCode $code): static
+    public static function create(NameVO $name, ProductCode $code): static
     {
         return new self(
-            $projectId,
             null,
             $name,
             $code
@@ -31,13 +29,6 @@ class ProductEntity
         if (!is_null($this->id)) throw new DomainValidationException('ID tidak dapat diperbarui');
 
         $this->id = $id;
-    }
-
-    public function setProjectId(int $projectId): void
-    {
-        if (!is_null($this->projectId)) throw new DomainValidationException('ID Project tidak dapat diperbarui');
-
-        $this->projectId = $projectId;
     }
 
     public function setName(NameVO $name): void
@@ -64,10 +55,5 @@ class ProductEntity
     public function getId(): int|null
     {
         return $this->id;
-    }
-
-    public function getProjectId(): int|null
-    {
-        return $this->projectId;
     }
 }
