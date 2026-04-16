@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[Group('catalog')]
 #[Group('product')]
 #[Group('usecase')]
 class CreateProductTest extends TestCase
@@ -59,7 +60,7 @@ class CreateProductTest extends TestCase
         ));
     }
 
-    public function test_create_product_should_return_ProductSimpleDTO_with_null_id()
+    public function test_create_product_should_return_ProductSimpleDTO_with_null_code()
     {
         $this->product
             ->expects($this->once())
@@ -94,7 +95,7 @@ class CreateProductTest extends TestCase
         $this->assertEquals('product', $res->name);
     }
 
-    public function test_create_product_should_return_ProductSimpleDTO_with_id()
+    public function test_create_product_should_return_ProductSimpleDTO_with_code()
     {
         $this->product
             ->expects($this->never())

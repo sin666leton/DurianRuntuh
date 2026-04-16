@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Entities;
 
-use App\Modules\Catalog\Domain\Product\Entities\ProductEntity;
-use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
+use App\Modules\Catalog\Domain\Brand\Entities\BrandEntity;
+use App\Modules\Catalog\Domain\Brand\ValueObjects\BrandCode;
 use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 use App\Modules\Shared\Domain\ValueObjects\NameVO;
 use PHPUnit\Framework\Attributes\Group;
@@ -11,18 +11,18 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('catalog')]
 #[Group('entity')]
-#[Group('product')]
-class ProductEntityTest extends TestCase
+#[Group('brand')]
+class BrandEntityTest extends TestCase
 {
-    private ProductEntity $entity;
+    private BrandEntity $entity;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->entity = ProductEntity::create(
-            new NameVO('Product'),
-            new ProductCode('1')
+        $this->entity = BrandEntity::create(
+            new NameVO('ABB'),
+            new BrandCode('001')
         );
     }
 
@@ -42,8 +42,8 @@ class ProductEntityTest extends TestCase
     {
         $this->entity->setId(1);
         
-        $this->assertEquals('Product', $this->entity->getName());
-        $this->assertEquals('1', $this->entity->getCode());
+        $this->assertEquals('ABB', $this->entity->getName());
+        $this->assertEquals('001', $this->entity->getCode());
         $this->assertEquals(1, $this->entity->getId());
     }
 }

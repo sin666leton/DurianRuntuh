@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\CodeVORule;
 
+#[Group('catalog')]
 #[Group('vo')]
 #[Group('product')]
 class ProductCodeVOTest extends TestCase

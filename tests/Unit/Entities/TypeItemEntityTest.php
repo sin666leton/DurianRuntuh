@@ -2,27 +2,27 @@
 
 namespace Tests\Unit\Entities;
 
-use App\Modules\Catalog\Domain\Product\Entities\ProductEntity;
-use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
+use App\Modules\Catalog\Domain\TypeItem\Entities\TypeItemEntity;
+use App\Modules\Catalog\Domain\TypeItem\ValueObjects\TypeItemCode;
 use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 use App\Modules\Shared\Domain\ValueObjects\NameVO;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 #[Group('catalog')]
+#[Group('typeitem')]
 #[Group('entity')]
-#[Group('product')]
-class ProductEntityTest extends TestCase
+class TypeItemEntityTest extends TestCase
 {
-    private ProductEntity $entity;
+    private TypeItemEntity $entity;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->entity = ProductEntity::create(
-            new NameVO('Product'),
-            new ProductCode('1')
+        $this->entity = TypeItemEntity::create(
+            new NameVO('Contactor'),
+            new TypeItemCode(83)
         );
     }
 
@@ -42,8 +42,8 @@ class ProductEntityTest extends TestCase
     {
         $this->entity->setId(1);
         
-        $this->assertEquals('Product', $this->entity->getName());
-        $this->assertEquals('1', $this->entity->getCode());
+        $this->assertEquals('Contactor', $this->entity->getName());
+        $this->assertEquals('083', $this->entity->getCode());
         $this->assertEquals(1, $this->entity->getId());
     }
 }
