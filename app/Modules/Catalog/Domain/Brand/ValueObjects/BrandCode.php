@@ -2,9 +2,10 @@
 
 namespace App\Modules\Catalog\Domain\Brand\ValueObjects;
 
+use App\Modules\Shared\Application\Markers\CodeVO;
 use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 
-class BrandCode
+class BrandCode implements CodeVO
 {
     public readonly string $value;
 

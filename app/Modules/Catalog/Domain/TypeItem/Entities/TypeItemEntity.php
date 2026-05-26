@@ -55,9 +55,9 @@ class TypeItemEntity
         return $this->name->value;
     }
 
-    public function getCode(): string
+    public function getCode(): TypeItemCode
     {
-        return $this->code->value;
+        return $this->code;
     }
     
 }

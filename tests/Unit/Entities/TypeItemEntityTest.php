@@ -43,7 +43,7 @@ class TypeItemEntityTest extends TestCase
         $this->entity->setId(1);
         
         $this->assertEquals('Contactor', $this->entity->getName());
-        $this->assertEquals('083', $this->entity->getCode());
+        $this->assertEquals('083', ($this->entity->getCode())->value);
         $this->assertEquals(1, $this->entity->getId());
     }
 }

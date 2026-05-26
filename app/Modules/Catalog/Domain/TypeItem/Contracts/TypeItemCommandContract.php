@@ -8,11 +8,19 @@ use App\Modules\Catalog\Domain\TypeItem\ValueObjects\TypeItemCode;
 interface TypeItemCommandContract
 {
     /**
+     * Cari Jenis Barang berdasarkan ID
+     * 
+     * @param int $id
+     * @return TypeItemEntity|null
+     */
+    public function find(int $id): TypeItemEntity|null;
+
+    /**
      * Ambil kode terakhir jenis barang
      * 
-     * @return TypeItemCode
+     * @return TypeItemCode|null
      */
-    public function findLastCode(): TypeItemCode;
+    public function findLastCode(): TypeItemCode|null;
 
     /**
      * Cek apakah jenis barang duplikat

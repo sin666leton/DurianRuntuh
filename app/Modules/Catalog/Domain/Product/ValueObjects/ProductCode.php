@@ -2,13 +2,18 @@
 
 namespace App\Modules\Catalog\Domain\Product\ValueObjects;
 
-use App\Modules\Shared\Domain\ValueObjects\BaseCodeVO;
+use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 
-final class ProductCode extends BaseCodeVO
+class ProductCode
 {
-    public function __construct(
-        public readonly string $value
-    ) {
-        $this->validate($value, 1);
+    public readonly string $value;
+
+    public function __construct(int $value)
+    {
+        $raw = (string) $value;
+        if (strlen($raw) > 1) throw new DomainValidationException("Kode tidak lebih dari 1 digit angka");
+
+        $formatted = str_pad((string) $raw, 1, '0', STR_PAD_LEFT);
+        $this->value = $formatted;
     }
 }

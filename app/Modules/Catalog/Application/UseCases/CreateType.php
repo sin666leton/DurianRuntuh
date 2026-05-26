@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Modules\Catalog\Application\UseCases;
+
+use App\Modules\Catalog\Application\Commands\CreateTypeCommand;
+use App\Modules\Catalog\Application\DTOs\SimpleTypeDTO;
+use App\Modules\Catalog\Application\Services\CodeFactory;
+use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
+use App\Modules\Catalog\Domain\Product\Contracts\ProductCommandContract;
+use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
+use App\Modules\Catalog\Domain\Project\ValueObjects\ProjectCode;
+use App\Modules\Catalog\Domain\Stock\Contracts\StockCommandContract;
+use App\Modules\Catalog\Domain\Stock\Entities\StockEntity;
+use App\Modules\Catalog\Domain\Stock\ValueObjects\StockCode;
+use App\Modules\Catalog\Domain\Type\Contracts\TypeCommandContract;
+use App\Modules\Catalog\Domain\Type\Entities\TypeEntity;
+use App\Modules\Catalog\Domain\Type\ValueObjects\TypeCode;
+use App\Modules\Catalog\Domain\TypeItem\Contracts\TypeItemCommandContract;
+use App\Modules\Shared\Application\Contracts\DatabaseTransaction;
+use App\Modules\Shared\Domain\Exceptions\DomainConflictException;
+use App\Modules\Shared\Domain\Exceptions\DomainNotFoundException;
+use App\Modules\Shared\Domain\ValueObjects\NameVO;
+
+class CreateType
+{
+    public function __construct(
+        private BrandCommandContract $brand,
+        private TypeItemCommandContract $typeItem,
+        private StockCommandContract $stock,
+        private TypeCommandContract $type,
+        private CodeFactory $codeFactory,
+        private DatabaseTransaction $transaction
+    ) {}
+    
+    public function handle(CreateTypeCommand $dto): SimpleTypeDTO
+    {
+        $brandEntity = $this->brand->find($dto->brandId);
+        if (!$brandEntity) throw new DomainNotFoundException('Merk');
+
+        $typeItemEntity = $this->typeItem->find($dto->typeItemId);
+        if (!$typeItemEntity) throw new DomainNotFoundException('Jenis Barang');
+
+        $code = null;
+        if (!$dto->code) {
+            $lastCode = $this->type->findLastCode($brandEntity->getId(), $typeItemEntity->getId());
+            $code = $this->codeFactory->increment($lastCode);
+        } else {
+            $code = $dto->code;
+        }
+
+        $typeEntity = TypeEntity::create(
+            $dto->userId,
+            $dto->productCode,
+            $brandEntity->getId(),
+            $typeItemEntity->getId(),
+            new NameVO($dto->name),
+            new TypeCode($code)
+        );
+
+        if ($this->type->isDuplicate($typeEntity)) throw new DomainConflictException("Tipe '".$typeEntity->getName()."' dengan code '".($typeEntity->getCode())->value."' sudah tersedia");
+
+        $this->transaction->start();
+        try {
+            $this->type->save($typeEntity);
+            
+            $stockEntity = StockEntity::create(
+                $typeEntity->getUserId(),
+                new NameVO("{$typeItemEntity->getname()} {$typeEntity->getName()}, {$brandEntity->getName()}"),
+                new StockCode(
+                    new ProjectCode(1),
+                    new ProductCode(1),
+                    $brandEntity->getCode(),
+                    $typeItemEntity->getCode(),
+                    $typeEntity->getCode()
+                )
+            );
+
+            $this->stock->save($stockEntity);
+
+            $this->transaction->commit();
+        } catch (\Throwable $th) {
+            $this->transaction->rollback();
+
+            throw $th;
+        }
+
+        return new SimpleTypeDTO(
+            $typeEntity->getId(),
+            $typeEntity->getName(),
+            ($typeEntity->getCode())->value
+        );
+    }
+}

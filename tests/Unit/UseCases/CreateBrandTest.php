@@ -3,7 +3,8 @@
 namespace Tests\Unit\UseCases;
 
 use App\Modules\Catalog\Application\Commands\CreateBrandCommand;
-use App\Modules\Catalog\Application\DTOs\BrandSimpleDTO;
+use App\Modules\Catalog\Application\DTOs\SimpleBrandDTO;
+use App\Modules\Catalog\Application\Services\CodeFactory;
 use App\Modules\Catalog\Application\UseCases\CreateBrand;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
 use App\Modules\Catalog\Domain\Brand\Entities\BrandEntity;
@@ -16,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 #[Group('usecase')]
 #[Group('brand')]
 #[Group('catalog')]
+#[Group('create-brand')]
 class CreateBrandTest extends TestCase
 {
     private CreateBrand $useCase;
@@ -23,107 +25,167 @@ class CreateBrandTest extends TestCase
     /**
      * @var BrandCommandContract&MockObject
      */
-    private BrandCommandContract $product;
+    private BrandCommandContract $brand;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->product = $this->createMock(BrandCommandContract::class);
+        $this->brand = $this->createMock(BrandCommandContract::class);
 
         $this->useCase = new CreateBrand(
-            $this->product
+            $this->brand,
+            new CodeFactory()
         );
     }
 
     public function test_create_brand_throw_DomainConflictException_when_duplicated()
     {
         $this->expectException(DomainConflictException::class);
-        $this->expectExceptionMessage("Merk 'ABB' dengan code '001' sudah tersedia");
+        $this->expectExceptionMessage("Merk 'ABB' atau code merk '001' sudah tersedia");
         $this->expectExceptionCode(409);
         
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof BrandEntity
-                && $entity->getCode() === '001'
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
                 && $entity->getName() === 'ABB';
             }))
             ->willReturn(true);
 
         $this->useCase->handle(new CreateBrandCommand(
+            1,
             'ABB',
             1
         ));
     }
 
-    public function test_create_brand_should_return_BrandSimpleDTO_with_null_code()
+    public function test_create_brand_should_return_SimpleBrandDTO_with_null_code()
     {
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('findLastCode')
             ->willReturn(new BrandCode(1));
 
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof BrandEntity
-                && $entity->getCode() === '002'
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
                 && $entity->getName() === 'ABB';
             }))
             ->willReturn(false);
 
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof BrandEntity
-                && $entity->getCode() === '002'
+                && $entity->getCode() instanceof BrandCode
+                
                 && $entity->getName() === 'ABB';
-            }));
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });
 
         $res = $this->useCase->handle(new CreateBrandCommand(
+            1,
             'ABB'
         ));
 
-        $this->assertInstanceOf(BrandSimpleDTO::class, $res);
+        $this->assertInstanceOf(SimpleBrandDTO::class, $res);
+        $this->assertEquals(1, $res->id);
         $this->assertEquals('002', $res->code);
         $this->assertEquals('ABB', $res->name);
     }
 
-    public function test_create_brand_should_return_BrandSimpleDTO_with_code()
+    public function test_create_brand_should_return_SimpleBrandDTO_with_code()
     {
-        $this->product
+        $this->brand
             ->expects($this->never())
             ->method('findLastCode');
 
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof BrandEntity
-                && $entity->getCode() === '001'
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
                 && $entity->getName() === 'ABB';
             }))
             ->willReturn(false);
 
-        $this->product
+        $this->brand
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof BrandEntity
-                && $entity->getCode() === '001'
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
                 && $entity->getName() === 'ABB';
-            }));
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });;
 
         $res = $this->useCase->handle(new CreateBrandCommand(
+            1,
             'ABB',
             1
         ));
 
-        $this->assertInstanceOf(BrandSimpleDTO::class, $res);
+        $this->assertInstanceOf(SimpleBrandDTO::class, $res);
+        $this->assertEquals(1, $res->id);
+        $this->assertEquals('001', $res->code);
+        $this->assertEquals('ABB', $res->name);
+    }
+
+    public function test_create_brand_should_return_SimpleBrandDTO_when_last_code_is_null()
+    {
+        $this->brand
+            ->expects($this->once())
+            ->method('findLastCode')
+            ->willReturn(null);
+
+        $this->brand
+            ->expects($this->once())
+            ->method('isDuplicate')
+            ->with($this->callback(function ($entity) {
+                return $entity instanceof BrandEntity
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
+                && $entity->getName() === 'ABB';
+            }))
+            ->willReturn(false);
+
+        $this->brand
+            ->expects($this->once())
+            ->method('save')
+            ->with($this->callback(function ($entity) {
+                return $entity instanceof BrandEntity
+                && $entity->getCode() instanceof BrandCode
+                && $entity->getUserId() === 1
+                && $entity->getName() === 'ABB';
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });;
+
+        $res = $this->useCase->handle(new CreateBrandCommand(
+            1,
+            'ABB',
+            null
+        ));
+
+        $this->assertInstanceOf(SimpleBrandDTO::class, $res);
+        $this->assertEquals(1, $res->id);
         $this->assertEquals('001', $res->code);
         $this->assertEquals('ABB', $res->name);
     }

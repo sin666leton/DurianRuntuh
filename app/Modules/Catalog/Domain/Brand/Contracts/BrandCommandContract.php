@@ -8,11 +8,19 @@ use App\Modules\Catalog\Domain\Brand\ValueObjects\BrandCode;
 interface BrandCommandContract
 {
     /**
+     * Cari Merk berdasarkan ID
+     * 
+     * @param int $id
+     * @return BrandEntity|null
+     */
+    public function find(int $id): BrandEntity|null;
+
+    /**
      * Ambil kode terakhir merk
      * 
-     * @return BrandCode
+     * @return BrandCode|null
      */
-    public function findLastCode(): BrandCode;
+    public function findLastCode(): BrandCode|null;
 
     /**
      * Cek apakah merk duplikat

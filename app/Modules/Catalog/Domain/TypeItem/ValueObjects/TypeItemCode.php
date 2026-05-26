@@ -2,9 +2,10 @@
 
 namespace App\Modules\Catalog\Domain\TypeItem\ValueObjects;
 
+use App\Modules\Shared\Application\Markers\CodeVO;
 use App\Modules\Shared\Domain\Exceptions\DomainValidationException;
 
-class TypeItemCode
+class TypeItemCode implements CodeVO
 {
     public readonly string $value;
 
