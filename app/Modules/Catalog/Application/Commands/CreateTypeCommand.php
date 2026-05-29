@@ -6,10 +6,9 @@ class CreateTypeCommand
 {
     public function __construct(
         public int $userId,
-        public int $productCode,
         public int $brandId,
         public int $typeItemId,
         public string $name,
-        public string|int|null $code
+        public ?int $code = null
     ) {}
 }

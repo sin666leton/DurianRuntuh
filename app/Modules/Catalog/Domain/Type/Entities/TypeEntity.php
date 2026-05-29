@@ -10,7 +10,6 @@ class TypeEntity
 {
     public function __construct(
         private int $userId,
-        private int $productId,
         private int $brandId,
         private int $typeItemId,
         private NameVO $name,
@@ -20,7 +19,6 @@ class TypeEntity
 
     public static function create(
         int $userId,
-        int $productId,
         int $brandId,
         int $typeItemId,
         NameVO $name,
@@ -29,7 +27,6 @@ class TypeEntity
     {
         return new self(
             $userId,
-            $productId,
             $brandId,
             $typeItemId,
             $name,
@@ -47,15 +44,8 @@ class TypeEntity
 
     public function setUserId(int $id): void
     {
-        if (!is_null($this->userId)) throw new DomainValidationException("ID Pengguna tidak dapat diperbarui");
+        if (!is_null($this->userId)) throw new DomainValidationException("ID Author tidak dapat diperbarui");
         $this->userId = $id;
-    }
-
-    public function setProductId(int $id): void
-    {
-        if (!is_null($this->productId)) throw new DomainValidationException("ID Produk tidak dapat diperbarui");
-
-        $this->productId = $id;
     }
 
     public function setBrandId(int $id): void
@@ -90,11 +80,6 @@ class TypeEntity
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getProductId(): int
-    {
-        return $this->productId;
     }
 
     public function getBrandId(): int

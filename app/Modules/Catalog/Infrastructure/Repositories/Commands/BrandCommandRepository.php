@@ -4,13 +4,22 @@ namespace App\Modules\Catalog\Infrastructure\Repositories\Commands;
 
 use App\Models\Brand;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
+use App\Modules\Catalog\Domain\Brand\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Brand\ValueObjects\BrandCode;
+use App\Modules\Shared\Domain\ValueObjects\NameVO;
 
 class BrandCommandRepository implements BrandCommandContract
 {
-    public function find(int $id): \App\Modules\Catalog\Domain\Brand\Entities\BrandEntity|null
+    public function find(int $id): BrandEntity|null
     {
-        
+        $res = Brand::where('id', $id)->first();
+
+        return ($res) ? new BrandEntity(
+            $res->user_id,
+            new NameVO($res->name),
+            new BrandCode($res->code),
+            $id
+        ) : null;
     }
 
     public function findLastCode(): BrandCode|null
@@ -20,7 +29,7 @@ class BrandCommandRepository implements BrandCommandContract
         return ($res) ? new BrandCode($res) : null;
     }
 
-    public function isDuplicate(\App\Modules\Catalog\Domain\Brand\Entities\BrandEntity $e): bool
+    public function isDuplicate(BrandEntity $e): bool
     {
         return Brand::select(['name', 'code'])
             ->where('name', $e->getName())
@@ -28,7 +37,7 @@ class BrandCommandRepository implements BrandCommandContract
             ->exists();
     }
 
-    public function save(\App\Modules\Catalog\Domain\Brand\Entities\BrandEntity $e): void
+    public function save(BrandEntity $e): void
     {
         $res = Brand::create([
             'user_id' => $e->getUserId(),

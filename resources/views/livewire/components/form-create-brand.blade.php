@@ -22,18 +22,13 @@
                     msg="{{ $errors->has('code') ? '* '.$errors->first('code') : '' }}"
                     x-bind:disabled="$wire.autoGenerate === '1'"
                 />
-                <div class="flex gap-2">
-                    <input
-                        type="checkbox"
-                        wire:model.live="autoGenerate"
-                        wire:loading.attr="disabled"
-                        wire:target="autoGenerate"
-                        id="autoGenerate"
-                        class="border border-gray-300"
-                        checked
-                    />
-                    <label for="autoGenerate">Auto generate </label>
-                </div>
+                <x-checkbox
+                    wire:model.live="autoGenerate"
+                    wire:loading.attr="disabled"
+                    wire:target="autoGenerate"
+                    label="Auto generate"
+                    checked
+                />
                 <div class="flex justify-end mt-3">
                     <x-primary-button type="submit" text="Submit"/>
                 </div>

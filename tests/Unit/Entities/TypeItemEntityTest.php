@@ -21,6 +21,7 @@ class TypeItemEntityTest extends TestCase
         parent::setUp();
 
         $this->entity = TypeItemEntity::create(
+            1,
             new NameVO('Contactor'),
             new TypeItemCode(83)
         );
@@ -38,6 +39,18 @@ class TypeItemEntityTest extends TestCase
         $this->assertEquals(1, $this->entity->getId());
     }
 
+    public function test_set_id_throw_DomainValidationException_when_user_id_already_filled()
+    {
+        $this->expectException(DomainValidationException::class);
+        $this->expectExceptionMessage('ID author tidak dapat diperbarui');
+        $this->expectExceptionCode(422);
+
+        $this->entity->setUserId(2);
+
+        $this->assertEquals(1, $this->entity->getId());
+    }
+
+    #[Group('create-type-item')]
     public function test_entity_return_value()
     {
         $this->entity->setId(1);

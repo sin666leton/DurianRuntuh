@@ -6,7 +6,10 @@ use App\Modules\Catalog\Application\Commands\CreateTypeCommand;
 use App\Modules\Catalog\Application\DTOs\SimpleTypeDTO;
 use App\Modules\Catalog\Application\Services\CodeFactory;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
-use App\Modules\Catalog\Domain\Product\Contracts\ProductCommandContract;
+use App\Modules\Catalog\Domain\Item\Contracts\ItemCommandContract;
+use App\Modules\Catalog\Domain\Item\Entities\ItemEntity;
+use App\Modules\Catalog\Domain\Item\ValueObjects\ItemCode;
+use App\Modules\Catalog\Domain\Item\ValueObjects\ItemDescriptionVO;
 use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
 use App\Modules\Catalog\Domain\Project\ValueObjects\ProjectCode;
 use App\Modules\Catalog\Domain\Stock\Contracts\StockCommandContract;
@@ -26,7 +29,7 @@ class CreateType
     public function __construct(
         private BrandCommandContract $brand,
         private TypeItemCommandContract $typeItem,
-        private StockCommandContract $stock,
+        private ItemCommandContract $item,
         private TypeCommandContract $type,
         private CodeFactory $codeFactory,
         private DatabaseTransaction $transaction
@@ -50,32 +53,33 @@ class CreateType
 
         $typeEntity = TypeEntity::create(
             $dto->userId,
-            $dto->productCode,
             $brandEntity->getId(),
             $typeItemEntity->getId(),
             new NameVO($dto->name),
             new TypeCode($code)
         );
 
-        if ($this->type->isDuplicate($typeEntity)) throw new DomainConflictException("Tipe '".$typeEntity->getName()."' dengan code '".($typeEntity->getCode())->value."' sudah tersedia");
+        if ($this->type->isDuplicate($typeEntity)) throw new DomainConflictException("Tipe '".$typeEntity->getName()."' atau code Tipe '".($typeEntity->getCode())->value."' sudah tersedia");
 
         $this->transaction->start();
         try {
             $this->type->save($typeEntity);
             
-            $stockEntity = StockEntity::create(
+            $itemEntity = ItemEntity::create(
                 $typeEntity->getUserId(),
-                new NameVO("{$typeItemEntity->getname()} {$typeEntity->getName()}, {$brandEntity->getName()}"),
-                new StockCode(
-                    new ProjectCode(1),
-                    new ProductCode(1),
+                new ItemDescriptionVO(
+                    $typeItemEntity->getName(),
+                    $typeEntity->getName(),
+                    $brandEntity->getName()
+                ),
+                new ItemCode(
                     $brandEntity->getCode(),
                     $typeItemEntity->getCode(),
                     $typeEntity->getCode()
                 )
             );
 
-            $this->stock->save($stockEntity);
+            $this->item->save($itemEntity);
 
             $this->transaction->commit();
         } catch (\Throwable $th) {

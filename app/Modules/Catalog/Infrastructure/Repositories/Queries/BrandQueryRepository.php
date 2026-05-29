@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Infrastructure\Repositories\Queries;
 use App\Models\Brand;
 use App\Modules\Catalog\Application\DTOs\BrandDTO;
 use App\Modules\Catalog\Application\DTOs\PaginatedBrandDTO;
+use App\Modules\Catalog\Application\DTOs\SimpleBrandDTO;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandQueryContract;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -37,5 +38,26 @@ class BrandQueryRepository implements BrandQueryContract
         ));
 
         return $result;
+    }
+
+    public function search(string $search = ''): array
+    {
+        $res = Brand::when(
+            filled($search),
+            function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
+                });
+            })
+            ->limit(10)
+            ->get();
+        
+        return $res->map(fn($brand) => new SimpleBrandDTO(
+            $brand->id,
+            $brand->name,
+            $brand->code
+        ))
+        ->toArray();
     }
 }

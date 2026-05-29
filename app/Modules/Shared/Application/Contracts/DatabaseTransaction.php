@@ -9,6 +9,4 @@ interface DatabaseTransaction
     public function rollback(): void;
 
     public function commit(): void;
-
-    public function run(callable $callback): mixed;
 }

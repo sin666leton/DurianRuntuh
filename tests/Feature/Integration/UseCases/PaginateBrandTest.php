@@ -55,7 +55,7 @@ class PaginateBrandTest extends TestCase
 
     public function test_paginate_brand_should_return_LengthAwarePaginator_and_data_is_BrandDTO_with_search()
     {
-        $author = User::factory()->createOne();
+        $author = User::factory()->state(['name' => 'zidan', 'username' => 'zidan'])->createOne();
 
         Brand::factory()
             ->state([

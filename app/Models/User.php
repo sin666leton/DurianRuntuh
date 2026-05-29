@@ -34,4 +34,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Brand::class);
     }
+
+    public function typeItem()
+    {
+        return $this->hasMany(TypeItem::class);
+    }
+
+    public function types()
+    {
+        return $this->hasMany(Type::class);
+    }
 }

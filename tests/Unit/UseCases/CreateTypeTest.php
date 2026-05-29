@@ -9,6 +9,10 @@ use App\Modules\Catalog\Application\UseCases\CreateType;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
 use App\Modules\Catalog\Domain\Brand\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Brand\ValueObjects\BrandCode;
+use App\Modules\Catalog\Domain\Item\Contracts\ItemCommandContract;
+use App\Modules\Catalog\Domain\Item\Entities\ItemEntity;
+use App\Modules\Catalog\Domain\Item\ValueObjects\ItemCode;
+use App\Modules\Catalog\Domain\Item\ValueObjects\ItemDescriptionVO;
 use App\Modules\Catalog\Domain\Stock\Contracts\StockCommandContract;
 use App\Modules\Catalog\Domain\Type\Contracts\TypeCommandContract;
 use App\Modules\Catalog\Domain\Type\Entities\TypeEntity;
@@ -46,9 +50,9 @@ class CreateTypeTest extends TestCase
     private TypeCommandContract $type;
 
     /**
-     * @var StockCommandContract&MockObject
+     * @var ItemCommandContract&MockObject
      */
-    private StockCommandContract $stock;
+    private ItemCommandContract $stock;
 
     /**
      * @var DatabaseTransaction&MockObject
@@ -64,13 +68,13 @@ class CreateTypeTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->brandEntity = new BrandEntity(new NameVO('ABB'), new BrandCode('1'), 1);
-        $this->typeItemEntity = new TypeItemEntity(new NameVO('Contactor'), new TypeItemCode('1'), 1);
+        $this->brandEntity = new BrandEntity(1, new NameVO('ABB'), new BrandCode('1'), 1);
+        $this->typeItemEntity = new TypeItemEntity(1, new NameVO('Contactor'), new TypeItemCode('1'), 1);
 
         $this->brand = $this->createMock(BrandCommandContract::class);
         $this->typeItem = $this->createMock(TypeItemCommandContract::class);
         $this->type = $this->createMock(TypeCommandContract::class);
-        $this->stock = $this->createMock(StockCommandContract::class);
+        $this->stock = $this->createMock(ItemCommandContract::class);
         $this->db = $this->createMock(DatabaseTransaction::class);
 
         $this->usecase = new CreateType(
@@ -83,7 +87,6 @@ class CreateTypeTest extends TestCase
         );
 
         $this->command = new CreateTypeCommand(
-            1,
             1,
             1,
             1,
@@ -132,7 +135,7 @@ class CreateTypeTest extends TestCase
     {
         $this->expectException(DomainConflictException::class);
         $this->expectExceptionCode(409);
-        $this->expectExceptionMessage("Tipe '3P 25A AX 25-30-01 220V' dengan code '0001' sudah tersedia");
+        $this->expectExceptionMessage("Tipe '3P 25A AX 25-30-01 220V' atau code Tipe '0001' sudah tersedia");
 
         $this->brand
             ->expects($this->once())
@@ -152,7 +155,6 @@ class CreateTypeTest extends TestCase
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeEntity
                 && $entity->getUserId() === 1
-                && $entity->getProductId() === 1
                 && $entity->getBrandId() === 1
                 && $entity->getTypeItemId() === 1
                 && $entity->getName() === '3P 25A AX 25-30-01 220V'
@@ -178,6 +180,18 @@ class CreateTypeTest extends TestCase
             ->with(1)
             ->willReturn($this->typeItemEntity);
 
+        $this->db
+            ->expects($this->once())
+            ->method('start');
+
+        $this->db
+            ->expects($this->once())
+            ->method('commit');
+
+        $this->db
+            ->expects($this->never())
+            ->method('rollback');
+
         $this->type
             ->expects($this->once())
             ->method('findLastCode')
@@ -190,7 +204,6 @@ class CreateTypeTest extends TestCase
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeEntity
                 && $entity->getUserId() === 1
-                && $entity->getProductId() === 1
                 && $entity->getBrandId() === 1
                 && $entity->getTypeItemId() === 1
                 && $entity->getName() === '3P 25A AX 25-30-01 220V'
@@ -205,7 +218,6 @@ class CreateTypeTest extends TestCase
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeEntity
                 && $entity->getUserId() === 1
-                && $entity->getProductId() === 1
                 && $entity->getBrandId() === 1
                 && $entity->getTypeItemId() === 1
                 && $entity->getName() === '3P 25A AX 25-30-01 220V'
@@ -221,7 +233,6 @@ class CreateTypeTest extends TestCase
             1,
             1,
             1,
-            1,
             '3P 25A AX 25-30-01 220V',
             null
         ));
@@ -234,6 +245,18 @@ class CreateTypeTest extends TestCase
 
     public function test_create_type_should_return_SimpleTypeDTO_when_code_are_null()
     {
+        $this->db
+            ->expects($this->once())
+            ->method('start');
+
+        $this->db
+            ->expects($this->once())
+            ->method('commit');
+
+        $this->db
+            ->expects($this->never())
+            ->method('rollback');
+
         $this->brand
             ->expects($this->once())
             ->method('find')
@@ -258,7 +281,6 @@ class CreateTypeTest extends TestCase
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeEntity
                 && $entity->getUserId() === 1
-                && $entity->getProductId() === 1
                 && $entity->getBrandId() === 1
                 && $entity->getTypeItemId() === 1
                 && $entity->getName() === '3P 25A AX 25-30-01 220V'
@@ -273,7 +295,6 @@ class CreateTypeTest extends TestCase
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeEntity
                 && $entity->getUserId() === 1
-                && $entity->getProductId() === 1
                 && $entity->getBrandId() === 1
                 && $entity->getTypeItemId() === 1
                 && $entity->getName() === '3P 25A AX 25-30-01 220V'
@@ -289,7 +310,6 @@ class CreateTypeTest extends TestCase
             1,
             1,
             1,
-            1,
             '3P 25A AX 25-30-01 220V',
             null
         ));
@@ -302,6 +322,18 @@ class CreateTypeTest extends TestCase
 
     public function test_create_type_should_return_SimpleTypeDTO()
     {
+        $this->db
+            ->expects($this->once())
+            ->method('start');
+
+        $this->db
+            ->expects($this->once())
+            ->method('commit');
+
+        $this->db
+            ->expects($this->never())
+            ->method('rollback');
+
         $this->brand
             ->expects($this->once())
             ->method('find')
@@ -353,7 +385,6 @@ class CreateTypeTest extends TestCase
             1,
             1,
             1,
-            1,
             '3P 25A AX 25-30-01 220V',
             2
         ));
@@ -362,5 +393,87 @@ class CreateTypeTest extends TestCase
         $this->assertEquals('3P 25A AX 25-30-01 220V', $res->name);
         $this->assertEquals(1, $res->id);
         $this->assertEquals('0002', $res->code);
+    }
+
+    public function test_create_type_should_generate_item()
+    {
+        $this->db
+            ->expects($this->once())
+            ->method('start');
+
+        $this->db
+            ->expects($this->once())
+            ->method('commit');
+
+        $this->db
+            ->expects($this->never())
+            ->method('rollback');
+
+        $this->brand
+            ->expects($this->once())
+            ->method('find')
+            ->with(1)
+            ->willReturn($this->brandEntity);
+
+        $this->typeItem
+            ->expects($this->once())
+            ->method('find')
+            ->with(1)
+            ->willReturn($this->typeItemEntity);
+
+        $this->type
+            ->expects($this->never())
+            ->method('findLastCode');
+
+        $this->type
+            ->expects($this->once())
+            ->method('isDuplicate')
+            ->with($this->callback(function ($entity) {
+                return $entity instanceof TypeEntity
+                && $entity->getUserId() === 1
+                && $entity->getBrandId() === 1
+                && $entity->getTypeItemId() === 1
+                && $entity->getName() === '3P 25A AX 25-30-01 220V'
+                && $entity->getCode() instanceof TypeCode
+                && $entity->getId() === null;
+            }))
+            ->willReturn(false);
+
+        $this->type
+            ->expects($this->once())
+            ->method('save')
+            ->with($this->callback(function ($entity) {
+                return $entity instanceof TypeEntity
+                && $entity->getUserId() === 1
+                && $entity->getBrandId() === 1
+                && $entity->getTypeItemId() === 1
+                && $entity->getName() === '3P 25A AX 25-30-01 220V'
+                && $entity->getCode() instanceof TypeCode
+                && $entity->getId() === null;
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });
+
+        $this->stock
+            ->expects($this->once())
+            ->method('save')
+            ->with($this->callback(function ($entity) {
+                return $entity instanceof ItemEntity
+                && $entity->getTypeId() === 1
+                && $entity->getCode() instanceof ItemCode
+                && $entity->getDescription() instanceof ItemDescriptionVO;
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });;
+
+        $this->usecase->handle(new CreateTypeCommand(
+            1,
+            1,
+            1,
+            '3P 25A AX 25-30-01 220V',
+            2
+        ));
     }
 }

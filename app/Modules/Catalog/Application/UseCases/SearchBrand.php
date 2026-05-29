@@ -12,14 +12,10 @@ class SearchBrand
     ) {}
 
     /**
-     * @param string $name
      * @return SimpleBrandDTO[]
      */
-    public function handle(string $name): array
+    public function handle(string $search): array
     {
-        $brands = $this->query->searchByName($name);
-        $dtos = array_map(fn($brand) => new SimpleBrandDTO($brand->id, $brand->name, $brand->code), $brands);
-
-        return $dtos;
+        return $this->query->search($search);
     }
 }

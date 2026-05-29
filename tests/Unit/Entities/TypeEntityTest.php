@@ -24,7 +24,6 @@ class TypeEntityTest extends TestCase
             1,
             1,
             1,
-            1,
             new NameVO('3P 25A AX 25-30-01 220V'),
             new TypeCode(1)
         );
@@ -45,24 +44,12 @@ class TypeEntityTest extends TestCase
     public function test_set_id_throw_DomainValidationException_when_user_id_already_filled()
     {
         $this->expectException(DomainValidationException::class);
-        $this->expectExceptionMessage('ID Pengguna tidak dapat diperbarui');
+        $this->expectExceptionMessage('ID Author tidak dapat diperbarui');
         $this->expectExceptionCode(422);
 
         $this->entity->setUserId(2);
 
         $this->assertEquals(1, $this->entity->getUserId());
-    }
-
-
-    public function test_set_product_id_throw_DomainValidationException_when_id_already_filled()
-    {
-        $this->expectException(DomainValidationException::class);
-        $this->expectExceptionMessage('ID Produk tidak dapat diperbarui');
-        $this->expectExceptionCode(422);
-
-        $this->entity->setProductId(2);
-
-        $this->assertEquals(1, $this->entity->getProductId());
     }
 
     public function test_set_brand_id_throw_DomainValidationException_when_id_already_filled()
@@ -87,13 +74,13 @@ class TypeEntityTest extends TestCase
         $this->assertEquals(1, $this->entity->getTypeItemId());
     }
 
+    #[Group('create-type')]
     public function test_entity_return_value()
     {
         $this->entity->setId(1);
         
         $this->assertEquals('3P 25A AX 25-30-01 220V', $this->entity->getName());
         $this->assertEquals(1, $this->entity->getId());
-        $this->assertEquals(1, $this->entity->getProductId());
         $this->assertEquals(1, $this->entity->getBrandId());
         $this->assertEquals(1, $this->entity->getTypeItemId());
         $this->assertInstanceOf(TypeCode::class, $this->entity->getCode());

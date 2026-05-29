@@ -3,6 +3,7 @@
 namespace Tests\Unit\UseCases;
 
 use App\Modules\Catalog\Application\Commands\CreateTypeItemCommand;
+use App\Modules\Catalog\Application\DTOs\SimpleTypeItemDTO;
 use App\Modules\Catalog\Application\DTOs\TypeItemSimpleDTO;
 use App\Modules\Catalog\Application\Services\CodeFactory;
 use App\Modules\Catalog\Application\UseCases\CreateTypeItem;
@@ -25,16 +26,16 @@ class CreateTypeItemTest extends TestCase
     /**
      * @var TypeItemCommandContract&MockObject
      */
-    private TypeItemCommandContract $product;
+    private TypeItemCommandContract $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->product = $this->createMock(TypeItemCommandContract::class);
+        $this->repository = $this->createMock(TypeItemCommandContract::class);
 
         $this->useCase = new CreateTypeItem(
-            $this->product,
+            $this->repository,
             new CodeFactory()
         );
     }
@@ -42,10 +43,10 @@ class CreateTypeItemTest extends TestCase
     public function test_create_type_item_throw_DomainConflictException_when_duplicated()
     {
         $this->expectException(DomainConflictException::class);
-        $this->expectExceptionMessage("Jenis barang 'Contactor' dengan code '083' sudah tersedia");
+        $this->expectExceptionMessage("Jenis barang 'Contactor' atau code Jenis barang '083' sudah tersedia");
         $this->expectExceptionCode(409);
         
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
@@ -56,6 +57,7 @@ class CreateTypeItemTest extends TestCase
             ->willReturn(true);
 
         $this->useCase->handle(new CreateTypeItemCommand(
+            1,
             'Contactor',
             83
         ));
@@ -63,12 +65,12 @@ class CreateTypeItemTest extends TestCase
 
     public function test_create_type_item_should_return_TypeItemSimpleDTO_with_null_code()
     {
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('findLastCode')
             ->willReturn(new TypeItemCode(82));
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
@@ -78,31 +80,35 @@ class CreateTypeItemTest extends TestCase
             }))
             ->willReturn(false);
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeItemEntity
                 && $entity->getCode() instanceof TypeItemCode
                 && $entity->getName() === 'Contactor';
-            }));
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });
 
         $res = $this->useCase->handle(new CreateTypeItemCommand(
+            1,
             'Contactor'
         ));
 
-        $this->assertInstanceOf(TypeItemSimpleDTO::class, $res);
+        $this->assertInstanceOf(SimpleTypeItemDTO::class, $res);
         $this->assertEquals('083', $res->code);
         $this->assertEquals('Contactor', $res->name);
     }
 
     public function test_create_type_item_should_return_TypeItemSimpleDTO_with_code()
     {
-        $this->product
+        $this->repository
             ->expects($this->never())
             ->method('findLastCode');
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
@@ -112,33 +118,37 @@ class CreateTypeItemTest extends TestCase
             }))
             ->willReturn(false);
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeItemEntity
                 && $entity->getCode() instanceof TypeItemCode
                 && $entity->getName() === 'Contactor';
-            }));
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });
 
         $res = $this->useCase->handle(new CreateTypeItemCommand(
+            1,
             'Contactor',
             83
         ));
 
-        $this->assertInstanceOf(TypeItemSimpleDTO::class, $res);
+        $this->assertInstanceOf(SimpleTypeItemDTO::class, $res);
         $this->assertEquals('083', $res->code);
         $this->assertEquals('Contactor', $res->name);
     }
 
     public function test_create_type_item_should_return_TypeItemSimpleDTO_with_null_code_when_last_code_is_null()
     {
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('findLastCode')
             ->willReturn(null);
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('isDuplicate')
             ->with($this->callback(function ($entity) {
@@ -148,21 +158,25 @@ class CreateTypeItemTest extends TestCase
             }))
             ->willReturn(false);
 
-        $this->product
+        $this->repository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($entity) {
                 return $entity instanceof TypeItemEntity
                 && $entity->getCode() instanceof TypeItemCode
                 && $entity->getName() === 'Contactor';
-            }));
+            }))
+            ->willReturnCallback(function ($entity) {
+                $entity->setId(1);
+            });
 
         $res = $this->useCase->handle(new CreateTypeItemCommand(
+            1,
             'Contactor',
             null
         ));
 
-        $this->assertInstanceOf(TypeItemSimpleDTO::class, $res);
+        $this->assertInstanceOf(SimpleTypeItemDTO::class, $res);
         $this->assertEquals('001', $res->code);
         $this->assertEquals('Contactor', $res->name);
     }

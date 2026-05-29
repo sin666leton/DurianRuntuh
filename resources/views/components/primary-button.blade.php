@@ -1,4 +1,4 @@
-<button {{ $attributes }} wire:loading.attr="disabled" class="flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed text-white min-w-20 min-h-9 text-sm font-bold bg-[#3e77f4] rounded-sm hover:bg-[#3669d9] duration-100 cursor-pointer">
+<button wire:loading.attr="disabled" class="flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed text-white min-w-20 min-h-9 text-sm font-bold bg-[#3e77f4] rounded-sm hover:bg-[#3669d9] duration-100 cursor-pointer" {{ $attributes }} >
     <span wire:loading.remove wire:target="submit">{{ $text }}</span>
     
     <span wire:loading wire:target="submit" class="">
