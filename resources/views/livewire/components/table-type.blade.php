@@ -8,7 +8,7 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <input wire:model.live.debounce.300ms="searchBrand" type="text" name="" id="" placeholder="Cari" class="px-2 py-2 w-full focus:outline-none">
+                <input wire:model.live.debounce.300ms="searchType" type="text" name="" id="" placeholder="Cari" class="px-2 py-2 w-full focus:outline-none">
             </div>
         </div>
         <div class="flex">
@@ -30,13 +30,13 @@
             <table class="table-fixed min-w-max text-left">
                 <thead class="sticky top-0 shadow-sm shadow-gray-200 bg-white ">
                     <tr class="*:px-4 *:py-2 *:text-gray-500 *:font-normal *:text-sm *:sticky *:top-0">
-                        <th class="w-36">Merk</th>
-                        <th class="w-36">Jenis Barang</th>
-                        <th class="w-52">Nama</th>
+                        <th class="min-w-36 w-auto">Merk</th>
+                        <th class="min-w-36 w-auto">Jenis Barang</th>
+                        <th class="min-w-52 w-auto">Nama</th>
                         <th class="w-16">Kode</th>
-                        <th class="w-72">Final Deskripsi</th>
-                        <th class="w-52">Final Kode</th>
-                        <th class="w-52">Pembuat</th>
+                        <th class="min-w-72 w-auto">Final Deskripsi</th>
+                        <th class="min-w-52 w-auto">Final Kode</th>
+                        <th class="min-w-52 w-auto">Pembuat</th>
                     </tr>
                 </thead>
                 <tbody class="overflow-y-auto w-full *:border-b *:border-gray-200">

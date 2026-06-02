@@ -75,6 +75,7 @@ class FormCreateTypeItem extends Component
             $this->dispatch('typeitem-updated');
 
             if ($this->autoGenerate) $this->setLastCode();
+            
             $this->resetExcept(['autoGenerate']);
         } catch (\Throwable $th) {
             $this->errorMessage = $th->getMessage();

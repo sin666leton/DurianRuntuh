@@ -22,7 +22,7 @@ class BrandEntityTest extends TestCase
 
         $this->entity = BrandEntity::create(
             1,
-            new NameVO('abb'),
+            new NameVO('ABB'),
             new BrandCode('001')
         );
     }

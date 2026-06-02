@@ -66,7 +66,7 @@ class CreateType
             $this->type->save($typeEntity);
             
             $itemEntity = ItemEntity::create(
-                $typeEntity->getUserId(),
+                $typeEntity->getId(),
                 new ItemDescriptionVO(
                     $typeItemEntity->getName(),
                     $typeEntity->getName(),

@@ -35,7 +35,7 @@ class CreateBrandFlowTest extends TestCase
 
         Livewire::test(FormCreateBrand::class)
             ->set('autoGenerate', '0')
-            ->set('name', 'abb')
+            ->set('name', 'ABB')
             ->set('code', '30')
             ->call('submit')
             ->assertSet('name', '')
@@ -59,7 +59,7 @@ class CreateBrandFlowTest extends TestCase
 
         Livewire::test(FormCreateBrand::class)
             ->set('autoGenerate', '1')
-            ->set('name', 'abb')
+            ->set('name', 'ABB')
             ->call('submit')
             ->assertSet('name', '')
             ->assertSet('code', '')

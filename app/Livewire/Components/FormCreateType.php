@@ -136,17 +136,52 @@ class FormCreateType extends Component
         $this->code = $this->codeFactory->increment($code);
     }
 
+    public function updatedAutoGenerate(): void
+    {
+        if (boolval($this->autoGenerate)) {
+            $this->setLastCode();
+        } else {
+            $this->code = '';
+        }
+    }
+
     public function submit(CreateType $usecase)
     {
-        $usecase->handle(new CreateTypeCommand(
-            1,
-            $this->selectedBrandId,
-            $this->selectedTypeItemId,
-            $this->name,
-            $this->code
-        ));
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required_if:autoGenerate,false|integer|min:1|digits_between:1,4',
+            'selectedBrandId' => 'required|integer',
+            'selectedTypeItemId' => 'required|integer'
+        ], [
+            'required' => ':attribute tidak boleh kosong.',
+            'integer' => ':attribute harus berupa angka.',
+            'digits_between' => ':attribute tidak kurang dari :min dan tidak lebih dari :max digit.',
+            'bool' => ':attribute harus berupa boolean.',
+            'required_if' => ':attribute diperlukan ketika :other aktif.',
+            'max' => ':attribute tidak lebih dari :max karakter.',
+            'min' => ':attribute tidak kurang dari :min.'
+        ], [
+            'selectedBrandId' => 'Merk',
+            'selectedTypeItemId' => 'Jenis Barang',
+            'name' => 'Nama Tipe',
+            'code' => 'Kode Tipe'
+        ]);
 
-        $this->dispatch('type-updated');
+        try {
+            // 3P 25A AX 25-30-01 220V
+            $usecase->handle(new CreateTypeCommand(
+                1,
+                $this->selectedBrandId,
+                $this->selectedTypeItemId,
+                $this->name,
+                intval($this->code)
+            ));
+    
+            if (filled($this->errorMessage)) $this->errorMessage = '';
+            $this->dispatch('type-updated');
+        } catch (\Throwable $th) {
+            $this->errorMessage = $th->getMessage();
+        }
     }
 
     public function boot(SearchBrand $brand, SearchTypeItem $typeItem, GetTypeLastCode $type, CodeFactory $codeFactory)

@@ -54,13 +54,14 @@ class FormCreateBrand extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'code' => 'integer|min:1'
+            'code' => 'integer|min:1|digits_between:1,3'
         ], [
             'min' => ':attribute tidak kurang dari :min.',   
             'required' => ':attribute tidak boleh kosong.',
             'max' => ':attribute tidak lebih dari :max karakter.',
             'string' => ':attribute tidak valid.',
-            'integer' => ':attribute harus berupa angka.'
+            'integer' => ':attribute harus berupa angka.',
+            'digits_between' => ':attribute tidak kurang dari :min dan tidak lebih dari :max digit.'
         ], [
             'name' => 'Nama',
             'code' => 'Kode'
@@ -76,6 +77,7 @@ class FormCreateBrand extends Component
             $this->dispatch('brand-updated');
 
             if ($this->autoGenerate) $this->setLastCode();
+            if (filled($this->errorMessage)) $this->errorMessage = '';
             $this->resetExcept(['autoGenerate']);
         } catch (\Throwable $th) {
             $this->errorMessage = $th->getMessage();

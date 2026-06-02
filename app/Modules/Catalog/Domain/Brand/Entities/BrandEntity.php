@@ -65,7 +65,7 @@ class BrandEntity
 
     public function getName(): string
     {
-        return strtoupper($this->name->value);
+        return $this->name->value;
     }
 
     public function getCode(): BrandCode

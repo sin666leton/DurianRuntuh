@@ -7,13 +7,13 @@
             <p>Beranda</p>
         </a>
         <a href="/brands" wire:navigate wire:current="hover:bg-transparent text-[#3e77f4] font-semibold" class="hover:bg-[#ededed]">
-            <p>Manajemen Merk</p>
+            <p>Master Merk</p>
         </a>
         <a href="/type-items" wire:navigate wire:current="hover:bg-transparent text-[#3e77f4] font-semibold" class="hover:bg-[#ededed]">
-            <p>Manajemen Jenis Barang</p>
+            <p>Master Jenis Barang</p>
         </a>
         <a href="/types" wire:navigate wire:current="hover:bg-transparent text-[#3e77f4] font-semibold" class="hover:bg-[#ededed]">
-            <p>Manajemen Tipe</p>
+            <p>Master Tipe & Items</p>
         </a>
     </div>
     <div class="border-t-2 border-gray-100 py-2">

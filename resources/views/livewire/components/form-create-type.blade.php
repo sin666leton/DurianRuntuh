@@ -13,7 +13,7 @@
                     wire:model.live.debounce.300ms="searchBrand"
                     type="text"
                     label="Pilih Merk"
-                    msg="{{ $errors->has('name') ? '* '.$errors->first('name') : '' }}"
+                    msg="{{ $errors->has('selectedBrandId') ? '* '.$errors->first('selectedBrandId') : '' }}"
                     required
 
                     selected-name="{{ $selectedBrandName }}"
@@ -37,7 +37,7 @@
                     wire:model.live.debounce.300ms="searchTypeItem"
                     type="text"
                     label="Pilih Jenis Barang"
-                    msg="{{ $errors->has('name') ? '* '.$errors->first('name') : '' }}"
+                    msg="{{ $errors->has('selectedTypeItemId') ? '* '.$errors->first('selectedTypeItemId') : '' }}"
                     required
                     x-bind:class="$wire.selectedBrandId ? 'bg-white' : 'bg-[#efefef]'"
                     :disabled="!filled($selectedBrandId)"
