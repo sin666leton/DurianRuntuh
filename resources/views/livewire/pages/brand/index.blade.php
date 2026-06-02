@@ -3,7 +3,7 @@
         'Beranda' => '/home',
         'Merk' => '#'
     ]"/>
-    <x-header title="Manajemen Merk" />
+    <x-header title="Master Merk" />
     <div class="flex flex-col gap-8">
         <!-- Form -->
         <livewire:components.form-create-brand/>

@@ -1,9 +1,9 @@
 <x-container>
     <x-breadcrumb :links="[
         'Beranda' => '/home',
-        'Jenis Barang' => '#'
+        'Master Tipe & Items' => '#'
     ]"/>
-    <x-header title="Manajemen Jenis Barang" />
+    <x-header title="Master Tipe & Items" />
     <div class="flex flex-col gap-8">
         <!-- Form -->
         <livewire:components.form-create-type/>
