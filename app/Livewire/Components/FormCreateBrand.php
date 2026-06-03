@@ -74,14 +74,18 @@ class FormCreateBrand extends Component
                 filled($this->code) ? intval($this->code) : null
             ));
 
-            $this->dispatch('brand-updated');
-
-            if ($this->autoGenerate) $this->setLastCode();
-            if (filled($this->errorMessage)) $this->errorMessage = '';
-            $this->resetExcept(['autoGenerate']);
+            $this->afterSubmit();
         } catch (\Throwable $th) {
             $this->errorMessage = $th->getMessage();
         }
+    }
+
+    private function afterSubmit()
+    {
+        if (filled($this->errorMessage)) $this->errorMessage = '';
+        $this->dispatch('brand-updated');
+        $this->resetExcept(['autoGenerate']);
+        boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }
 
     public function render()

@@ -85,6 +85,31 @@
                     :disabled="!filled($selectedTypeItemId) || !filled($selectedBrandId)"
                 />
 
+                <div class="flex justify-between gap-4 mt-4">
+                    <div class="w-full">
+                        <!-- Preview final deskripsi -->
+                        <x-input
+                            x-bind:class="'bg-[#efefef] min-w-full'"
+                            type="text"
+                            label="Preview final deskripsi"
+                            msg=""
+                            value="{{ $selectedTypeItemId ? $selectedTypeItemName : '-' }} {{ $name ? $name : '-' }}, {{ $selectedBrandId ? $selectedBrandName : '-' }}"
+                            disabled
+                        />
+                    </div>
+                    <div class="w-full">
+                        <!-- Preview final kode -->
+                        <x-input
+                            x-bind:class="'bg-[#efefef]'"
+                            type="text"
+                            label="Preview final kode"
+                            msg=""
+                            value="1.1.{{ $selectedBrandId ? $selectedBrandCode : 'XXX' }}.{{ $selectedTypeItemId ? $selectedTypeItemCode : 'XXX' }}.{{ $code ? str_pad((string) $code, 4, '0', STR_PAD_LEFT) : 'XXXX' }}"
+                            disabled
+                        />
+                    </div>
+                </div>
+
                 <div class="flex justify-end mt-3">
                     <x-primary-button type="submit" text="Submit"/>
                 </div>

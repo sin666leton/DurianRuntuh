@@ -49,8 +49,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="border-t border-gray-200 p-2">
-            {{ $pagination->links() }}
+        <div class="border-t border-gray-200 px-4 py-2">
+            {{ $pagination->links('vendor.livewire.bootstrap') }}
         </div>
     </div>
 </div>

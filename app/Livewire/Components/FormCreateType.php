@@ -29,6 +29,8 @@ class FormCreateType extends Component
 
     public string $selectedBrandName = '';
 
+    public string $selectedBrandCode = '';
+
     public array $brandItems = [];
 
     public bool $brandOpen = false;
@@ -39,6 +41,8 @@ class FormCreateType extends Component
     public ?int $selectedTypeItemId = null;
 
     public string $selectedTypeItemName = '';
+
+    public string $selectedTypeItemCode = '';
 
     public array $typeItemItems = [];
 
@@ -74,6 +78,7 @@ class FormCreateType extends Component
         $this->selectedBrandId = $id;
         $this->selectedBrandName = $name;
         $this->searchBrand = $name.' - '.$code;
+        $this->selectedBrandCode = $code;
         $this->brandOpen = false;
     }
 
@@ -111,6 +116,7 @@ class FormCreateType extends Component
         $this->selectedTypeItemId = $id;
         $this->selectedTypeItemName = $name;
         $this->searchTypeItem = $name.' - '.$code;
+        $this->selectedTypeItemCode = $code;
         $this->typeItemOpen = false;
 
         $this->setLastCode();
@@ -177,11 +183,18 @@ class FormCreateType extends Component
                 intval($this->code)
             ));
     
-            if (filled($this->errorMessage)) $this->errorMessage = '';
-            $this->dispatch('type-updated');
+            $this->afterSubmit();
         } catch (\Throwable $th) {
             $this->errorMessage = $th->getMessage();
         }
+    }
+
+    private function afterSubmit()
+    {
+        if (filled($this->errorMessage)) $this->errorMessage = '';
+        $this->dispatch('type-updated');
+        $this->name = '';
+        boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }
 
     public function boot(SearchBrand $brand, SearchTypeItem $typeItem, GetTypeLastCode $type, CodeFactory $codeFactory)

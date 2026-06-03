@@ -72,14 +72,19 @@ class FormCreateTypeItem extends Component
                 filled($this->code) ? intval($this->code) : null
             ));
 
-            $this->dispatch('typeitem-updated');
-
-            if ($this->autoGenerate) $this->setLastCode();
-            
-            $this->resetExcept(['autoGenerate']);
+            $this->afterSubmit();
         } catch (\Throwable $th) {
             $this->errorMessage = $th->getMessage();
         }
+    }
+
+    private function afterSubmit()
+    {
+        if (filled($this->errorMessage)) $this->errorMessage = '';
+        $this->dispatch('typeitem-updated');
+
+        $this->resetExcept(['autoGenerate']);
+        boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }
 
     public function render()
