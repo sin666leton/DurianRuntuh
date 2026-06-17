@@ -80,10 +80,12 @@ class FormCreateBrand extends Component
         }
     }
 
-    private function afterSubmit()
+private function afterSubmit()
     {
         if (filled($this->errorMessage)) $this->errorMessage = '';
         $this->dispatch('brand-updated');
+        $this->dispatch('notify', message: "Merk '{$this->name}' berhasil ditambahkan!");
+        $this->name = ''; 
         $this->resetExcept(['autoGenerate']);
         boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }

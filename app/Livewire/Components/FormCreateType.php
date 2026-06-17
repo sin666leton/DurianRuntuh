@@ -193,6 +193,7 @@ class FormCreateType extends Component
     {
         if (filled($this->errorMessage)) $this->errorMessage = '';
         $this->dispatch('type-updated');
+        $this->dispatch('notify', message: "Tipe '{$this->name}' berhasil ditambahkan!");
         $this->name = '';
         boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }

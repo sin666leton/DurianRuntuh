@@ -82,7 +82,7 @@ class FormCreateTypeItem extends Component
     {
         if (filled($this->errorMessage)) $this->errorMessage = '';
         $this->dispatch('typeitem-updated');
-
+        $this->dispatch('notify', message: "Jenis Barang '{$this->name}' berhasil ditambahkan!");
         $this->resetExcept(['autoGenerate']);
         boolval($this->autoGenerate) ? $this->setLastCode() : $this->code = '';
     }

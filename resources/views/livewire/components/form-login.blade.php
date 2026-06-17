@@ -5,6 +5,9 @@
         </div>
     @endif
     <x-card>
+        <div class="flex justify-center mb-6 mt-2">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="Logo Aplikasi" class="h-16 w-auto">
+        </div>
         <form wire:submit="submit">
             <div class="flex flex-col gap-2">
                 <x-input
