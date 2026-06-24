@@ -27,9 +27,17 @@
         @endforeach    
     </div>
     
-    @if ($hasMore)
+    @if (boolval($hasMore))
         <div class="mt-6 text-center">
-            <button class="text-sm font-bold text-[#3e77f4] hover:text-[#3669d9] transition-colors">Lihat lebih banyak ↓</button>
+            <button 
+                wire:click="loadMore" 
+                wire:loading.attr="disabled"
+                wire:target="loadMore"
+                class="text-sm font-bold text-[#3e77f4] hover:text-[#3669d9] transition-colors cursor-pointer"
+            >
+                <span wire:loading.remove wire:target="loadMore">Lihat lebih banyak ↓</span>
+                <span wire:loading wire:target="loadMore">Loading...</span>
+            </button>
         </div>
     @endif
 </x-card>

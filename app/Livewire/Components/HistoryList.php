@@ -7,9 +7,9 @@ use Livewire\Component;
 
 class HistoryList extends Component
 {
-    private int $offset = 0;
+    public int $offset = 0;
 
-    private int $limit = 5;
+    public int $limit = 4;
 
     /**
      * @var array<int, array{
@@ -34,19 +34,27 @@ class HistoryList extends Component
         $this->usecase = $usecase;
     }
 
+    public function mount()
+    {
+        $this->loadHistory();
+    }
+
     public function loadMore()
+    {
+        $this->offset += $this->limit;
+        $this->loadHistory();
+    }
+
+    private function loadHistory()
     {
         $dto = $this->usecase->handle($this->limit, $this->offset);
 
-        $this->listHistory = $dto->data;
+        $this->listHistory = array_merge($this->listHistory, $dto->data);
         $this->hasMore = $dto->hasMore;
-        $this->offset += $this->limit;
     }
 
     public function render()
     {
-        if (empty($this->listHistory)) $this->loadMore();
-
         return view('livewire.components.history-list');
     }
 }

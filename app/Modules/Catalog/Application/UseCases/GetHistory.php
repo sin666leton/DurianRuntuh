@@ -15,9 +15,12 @@ class GetHistory
     {
         $result = $this->query->get($limit, $offset);
 
+        $hasMore = count($result) > $limit;
+        $data = array_slice($result, 0, $limit);
+
         return new ListHistoryDTO(
-            $result,
-            (bool) count($result) > $result,
+            $data,
+            $hasMore,
         );
     }
 }
