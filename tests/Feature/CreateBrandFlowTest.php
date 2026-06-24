@@ -62,7 +62,7 @@ class CreateBrandFlowTest extends TestCase
             ->set('name', 'ABB')
             ->call('submit')
             ->assertSet('name', '')
-            ->assertSet('code', '')
+            ->assertSet('code', '2')
             ->assertSet('autoGenerate', '1')
             ->assertDispatched('brand-updated');
 

@@ -91,7 +91,7 @@
                         <x-input
                             x-bind:class="'bg-[#efefef] min-w-full'"
                             type="text"
-                            label="Preview final deskripsi"
+                            label="Preview FINA deskripsi"
                             msg=""
                             value="{{ $selectedTypeItemId ? $selectedTypeItemName : '-' }} {{ $name ? $name : '-' }}, {{ $selectedBrandId ? $selectedBrandName : '-' }}"
                             disabled
@@ -102,7 +102,7 @@
                         <x-input
                             x-bind:class="'bg-[#efefef]'"
                             type="text"
-                            label="Preview final kode"
+                            label="Preview FINA kode"
                             msg=""
                             value="1.1.{{ $selectedBrandId ? $selectedBrandCode : 'XXX' }}.{{ $selectedTypeItemId ? $selectedTypeItemCode : 'XXX' }}.{{ $code ? str_pad((string) $code, 4, '0', STR_PAD_LEFT) : 'XXXX' }}"
                             disabled

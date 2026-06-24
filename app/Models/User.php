@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Type::class);
     }
+
+    public function catalogHistory()
+    {
+        return $this->hasMany(CatalogHistory::class);
+    }
 }

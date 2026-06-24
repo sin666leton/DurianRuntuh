@@ -42,7 +42,7 @@ class CreateBrandTest extends TestCase
     public function test_create_brand_throw_DomainConflictException_when_duplicated()
     {
         $this->expectException(DomainConflictException::class);
-        $this->expectExceptionMessage("Merk 'ABB' atau code merk '001' sudah tersedia");
+        $this->expectExceptionMessage("Master Merk 'ABB' atau kode Master Merk '001' sudah tersedia");
         $this->expectExceptionCode(409);
         
         $this->brand

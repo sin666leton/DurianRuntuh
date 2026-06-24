@@ -176,7 +176,7 @@ class FormCreateType extends Component
         try {
             // 3P 25A AX 25-30-01 220V
             $usecase->handle(new CreateTypeCommand(
-                1,
+                auth()->user()->id,
                 $this->selectedBrandId,
                 $this->selectedTypeItemId,
                 $this->name,

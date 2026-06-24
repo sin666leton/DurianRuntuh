@@ -99,7 +99,7 @@ class CreateTypeTest extends TestCase
     {
         $this->expectException(DomainNotFoundException::class);
         $this->expectExceptionCode(404);
-        $this->expectExceptionMessage('Merk tidak ditemukan');
+        $this->expectExceptionMessage('Master Merk tidak ditemukan');
 
         $this->brand
             ->expects($this->once())
@@ -114,7 +114,7 @@ class CreateTypeTest extends TestCase
     {
         $this->expectException(DomainNotFoundException::class);
         $this->expectExceptionCode(404);
-        $this->expectExceptionMessage('Jenis Barang tidak ditemukan');
+        $this->expectExceptionMessage('Master Jenis Barang tidak ditemukan');
 
         $this->brand
             ->expects($this->once())
@@ -135,7 +135,7 @@ class CreateTypeTest extends TestCase
     {
         $this->expectException(DomainConflictException::class);
         $this->expectExceptionCode(409);
-        $this->expectExceptionMessage("Tipe '3P 25A AX 25-30-01 220V' atau code Tipe '0001' sudah tersedia");
+        $this->expectExceptionMessage("Master Tipe '3P 25A AX 25-30-01 220V' atau kode Master Tipe '0001' sudah tersedia");
 
         $this->brand
             ->expects($this->once())

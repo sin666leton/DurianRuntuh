@@ -43,7 +43,7 @@ class CreateTypeItemTest extends TestCase
     public function test_create_type_item_throw_DomainConflictException_when_duplicated()
     {
         $this->expectException(DomainConflictException::class);
-        $this->expectExceptionMessage("Jenis barang 'Contactor' atau code Jenis barang '083' sudah tersedia");
+        $this->expectExceptionMessage("Master Jenis barang 'Contactor' atau kode Master Jenis barang '083' sudah tersedia");
         $this->expectExceptionCode(409);
         
         $this->repository

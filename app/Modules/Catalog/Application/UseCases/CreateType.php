@@ -10,11 +10,6 @@ use App\Modules\Catalog\Domain\Item\Contracts\ItemCommandContract;
 use App\Modules\Catalog\Domain\Item\Entities\ItemEntity;
 use App\Modules\Catalog\Domain\Item\ValueObjects\ItemCode;
 use App\Modules\Catalog\Domain\Item\ValueObjects\ItemDescriptionVO;
-use App\Modules\Catalog\Domain\Product\ValueObjects\ProductCode;
-use App\Modules\Catalog\Domain\Project\ValueObjects\ProjectCode;
-use App\Modules\Catalog\Domain\Stock\Contracts\StockCommandContract;
-use App\Modules\Catalog\Domain\Stock\Entities\StockEntity;
-use App\Modules\Catalog\Domain\Stock\ValueObjects\StockCode;
 use App\Modules\Catalog\Domain\Type\Contracts\TypeCommandContract;
 use App\Modules\Catalog\Domain\Type\Entities\TypeEntity;
 use App\Modules\Catalog\Domain\Type\ValueObjects\TypeCode;
@@ -38,10 +33,10 @@ class CreateType
     public function handle(CreateTypeCommand $dto): SimpleTypeDTO
     {
         $brandEntity = $this->brand->find($dto->brandId);
-        if (!$brandEntity) throw new DomainNotFoundException('Merk');
+        if (!$brandEntity) throw new DomainNotFoundException('Master Merk');
 
         $typeItemEntity = $this->typeItem->find($dto->typeItemId);
-        if (!$typeItemEntity) throw new DomainNotFoundException('Jenis Barang');
+        if (!$typeItemEntity) throw new DomainNotFoundException('Master Jenis Barang');
 
         $code = null;
         if (!$dto->code) {
@@ -59,7 +54,7 @@ class CreateType
             new TypeCode($code)
         );
 
-        if ($this->type->isDuplicate($typeEntity)) throw new DomainConflictException("Tipe '".$typeEntity->getName()."' atau code Tipe '".($typeEntity->getCode())->value."' sudah tersedia");
+        if ($this->type->isDuplicate($typeEntity)) throw new DomainConflictException("Master Tipe '".$typeEntity->getName()."' atau kode Master Tipe '".($typeEntity->getCode())->value."' sudah tersedia");
 
         $this->transaction->start();
         try {

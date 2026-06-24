@@ -62,7 +62,7 @@ class CreateTypeItemFlowTest extends TestCase
             ->set('name', 'Contactor')
             ->call('submit')
             ->assertSet('name', '')
-            ->assertSet('code', '')
+            ->assertSet('code', '2')
             ->assertSet('autoGenerate', '1')
             ->assertDispatched('typeitem-updated');
 

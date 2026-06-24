@@ -18,7 +18,7 @@
                 <div class="flex-1" class="">
                     <select wire:model.live="size" name="" id="" class="bg-white px-1.5 py-1 rounded-sm shadow-sm text-sm">
                         <option value="10">10</option>
-                        <option value="20">2</option>
+                        <option value="20">20</option>
                         <option value="30">30</option>
                     </select>
                 </div>
@@ -34,8 +34,8 @@
                         <th class="min-w-36 w-auto">Jenis Barang</th>
                         <th class="min-w-52 w-auto">Nama</th>
                         <th class="w-16">Kode</th>
-                        <th class="min-w-72 w-auto">Final Deskripsi</th>
-                        <th class="min-w-52 w-auto">Final Kode</th>
+                        <th class="min-w-72 w-auto">FINA Deskripsi</th>
+                        <th class="min-w-52 w-auto">FINA Kode</th>
                         <th class="min-w-52 w-auto">Pembuat</th>
                     </tr>
                 </thead>

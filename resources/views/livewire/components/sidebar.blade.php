@@ -13,7 +13,7 @@
             <p>Master Jenis Barang</p>
         </a>
         <a href="/types" wire:navigate wire:current="hover:bg-transparent text-[#3e77f4] font-semibold" class="hover:bg-[#ededed]">
-            <p>Master Tipe & Items</p>
+            <p>Master Tipe</p>
         </a>
     </div>
     <div class="border-t-2 border-gray-100 py-2">

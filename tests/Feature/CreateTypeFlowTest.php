@@ -8,7 +8,6 @@ use App\Models\Type;
 use App\Models\TypeItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
@@ -32,6 +31,8 @@ class CreateTypeFlowTest extends TestCase
         $this->user = User::factory()->createOne();
         $this->brand = Brand::factory()->for($this->user)->createOne();
         $this->typeItem = TypeItem::factory()->for($this->user)->createOne();
+
+        $this->actingAs($this->user);
     }
 
     protected function tearDown(): void

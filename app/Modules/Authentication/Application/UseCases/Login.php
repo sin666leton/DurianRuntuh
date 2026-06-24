@@ -15,5 +15,7 @@ class Login
     public function handle(LoginCommand $command)
     {
         if (!$this->auth->login($command)) throw new DomainInvalidCredentialsException("Email atau password salah.");
+
+        session(['user_name' => auth()->user()->name]);
     }
 }

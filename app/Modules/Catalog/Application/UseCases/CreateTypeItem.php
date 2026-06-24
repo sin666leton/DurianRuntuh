@@ -35,7 +35,7 @@ class CreateTypeItem
             new TypeItemCode($code)
         );
 
-        if ($this->repository->isDuplicate($entity)) throw new DomainConflictException("Jenis barang '".$entity->getName()."' atau code Jenis barang '".($entity->getCode())->value."' sudah tersedia");
+        if ($this->repository->isDuplicate($entity)) throw new DomainConflictException("Master Jenis barang '".$entity->getName()."' atau kode Master Jenis barang '".($entity->getCode())->value."' sudah tersedia");
         
         $this->repository->save($entity);
 

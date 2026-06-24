@@ -6,16 +6,20 @@ use App\Modules\Authentication\Application\Contracts\AuthContract;
 use App\Modules\Authentication\Infrastructure\Repositories\AuthCommandRepository;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandCommandContract;
 use App\Modules\Catalog\Domain\Brand\Contracts\BrandQueryContract;
+use App\Modules\Catalog\Domain\CatalogHistory\Contracts\CatalogHistoryCommandContract;
+use App\Modules\Catalog\Domain\CatalogHistory\Contracts\CatalogHistoryQueryContract;
 use App\Modules\Catalog\Domain\Item\Contracts\ItemCommandContract;
 use App\Modules\Catalog\Domain\Type\Contracts\TypeCommandContract;
 use App\Modules\Catalog\Domain\Type\Contracts\TypeQueryContract;
 use App\Modules\Catalog\Domain\TypeItem\Contracts\TypeItemCommandContract;
 use App\Modules\Catalog\Domain\TypeItem\Contracts\TypeItemQueryContract;
 use App\Modules\Catalog\Infrastructure\Repositories\Commands\BrandCommandRepository;
+use App\Modules\Catalog\Infrastructure\Repositories\Commands\CatalogHistoryCommandRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Commands\ItemCommandRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Commands\TypeCommandRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Commands\TypeItemCommandRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Queries\BrandQueryRepository;
+use App\Modules\Catalog\Infrastructure\Repositories\Queries\CatalogHistoryQueryRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Queries\TypeItemQueryRepository;
 use App\Modules\Catalog\Infrastructure\Repositories\Queries\TypeQueryRepository;
 use App\Modules\Shared\Application\Contracts\DatabaseTransaction;
@@ -46,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Item
         $this->app->bind(ItemCommandContract::class, ItemCommandRepository::class);
+
+        // Catalog History
+        $this->app->bind(CatalogHistoryCommandContract::class, CatalogHistoryCommandRepository::class);
+        $this->app->bind(CatalogHistoryQueryContract::class, CatalogHistoryQueryRepository::class);
 
         $this->app->bind(AuthContract::class, AuthCommandRepository::class);
     }

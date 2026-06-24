@@ -34,7 +34,7 @@ class CreateBrand
             new BrandCode($code)
         );
 
-        if ($this->repository->isDuplicate($entity)) throw new DomainConflictException("Merk '".$entity->getName()."' atau code merk '".($entity->getCode())->value."' sudah tersedia");
+        if ($this->repository->isDuplicate($entity)) throw new DomainConflictException("Master Merk '".$entity->getName()."' atau kode Master Merk '".($entity->getCode())->value."' sudah tersedia");
         
         $this->repository->save($entity);
 

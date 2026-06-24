@@ -11,7 +11,7 @@ class TableType extends Component
 {
     use WithPagination;
 
-    public int $size = 10;
+    public string $size = '10';
 
     public string $searchType = '';
 
@@ -33,7 +33,7 @@ class TableType extends Component
 
     public function render(PaginateType $usecase)
     {
-        $dto = $usecase->handle($this->size, $this->searchType);
+        $dto = $usecase->handle(intval($this->size), $this->searchType);
 
         return view('livewire.components.table-type', [
             'pagination' => $dto
