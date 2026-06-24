@@ -16,6 +16,9 @@ class Login
     {
         if (!$this->auth->login($command)) throw new DomainInvalidCredentialsException("Email atau password salah.");
 
-        session(['user_name' => auth()->user()->name]);
+        session([
+            'user_name' => auth()->user()->name,
+            'user_email' => auth()->user()->email
+        ]);
     }
 }
