@@ -16,22 +16,6 @@ class CatalogHistoryEntity
         private ?int $modelId,
         private ?int $id = null,
     ) {}
-
-    public static function create(
-        int $userId,
-        string $modelType,
-        CatalogActionEnum $action,
-    ): static
-    {
-        return new self(
-            $userId,
-            $modelType,
-            $action,
-            null,
-            null,
-            null
-        );
-    }
     
     // Setter
     public function setId(int $id): void
